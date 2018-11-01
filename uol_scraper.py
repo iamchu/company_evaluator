@@ -1,16 +1,16 @@
 # handles scraping a list of all companies quoted in brazils stock market (Bovespa)
 # also handles the scraping of their individual historical quotations.
 # the saving and db managing will be made in another file
-
 import os
-import requests
-import bs4
-import sqlite3 as lite
 import sys
+import bs4
+import time
+import requests
+import sqlite3 as lite
 
-# grab BOVESPA company codes
+# grab BOVESPA company codes from 
 def returnCompanyCodesAsList():
-	url = 'https://cotacoes.economia.uol.com.br/acoes-bovespa.html?exchangeCode=.BVSP&page=1&size=3000'
+	url = 'https://cotacoes.economia.uol.com.br/acoes-bovespa.html?exchangeCode=.BVSP&page=1&size=10000'
 	list_of_company_codes = []
 	total_of_companies = 0
 
@@ -30,15 +30,14 @@ def returnCompanyCodesAsList():
 	print('Total of ' + str(total_of_companies) + ' companies listed in BOVESPA (Note that some may be deprecated)')
 	return list_of_company_codes
 
-# populate db with data from url passed as argument
 def scrapeCompanyQuotationsAndReturnAsListOfLists(company_code):
-	url = 'https://cotacoes.economia.uol.com.br/acao/cotacoes-historicas.html?codigo=' + company_code + '&beginDay=1&beginMonth=1&beginYear=2004&endDay=1&endMonth=1&endYear=2018&page=1&size=10000'
+	url = 'https://cotacoes.economia.uol.com.br/acao/cotacoes-historicas.html?codigo=' + company_code + '&beginDay=01&beginMonth=01&beginYear=2000&endDay='+ time.strftime("%d") +'&endMonth='+ time.strftime("%m") + '&endYear='+time.strftime("%Y")+'&page=1&size=10000'
 
 	page = requests.get(url)
 	page.raise_for_status()
+
 	# grab the lines as items on a list
 	# go through each of the items and break in a sublist and grab the corresponding items accordingly
-
 	soup = bs4.BeautifulSoup(page.text, "lxml")
 	tblInterday = soup.find(id="tblInterday")	
 	soup = bs4.BeautifulSoup(str(tblInterday), "lxml")	
@@ -61,4 +60,5 @@ def scrapeCompanyQuotationsAndReturnAsListOfLists(company_code):
 				current_line_historical_data.append(line_values[j].get_text().replace(".", ""))
 		company_historical_data.append(current_line_historical_data)
 
+	# if the company code goes to a page with no historical data (no quotations), this list is empty. It has len(company_historical_data) = 0
 	return company_historical_data

@@ -1,9 +1,7 @@
-import uol_scraper
 import os
-import requests
-import bs4
-import sqlite3 as lite
 import sys
+import uol_scraper
+import sqlite3 as lite
 
 # creates a respective table for the respective company in the db passed as argument
 def createTable(db, table_name):
@@ -37,29 +35,34 @@ def main():
 	# list_of_company_codes = returnCompanyCodesAsList()
 		
 	data = uol_scraper.scrapeCompanyQuotationsAndReturnAsListOfLists("VIVR3.SA")
-	for i in range(0,10):
-		print(data[i])
+	# for i in range(0,len(uol_scraper.scrapeCompanyQuotationsAndReturnAsListOfLists("VIVR3.SA"))):
+		# print(str(i) + "________________" + str(data[i]))
 	# for line in data:
 	# 	if len(line) > 7:
 	# 		print line
 
-	test_list = ["VIVR3.SA"]
+	list_of_companies_to_collect_data = ["ITAU3.SA"]
 
-	for company in test_list:
+	for company in list_of_companies_to_collect_data:
 		total_entries = 0
 		createTable('stock_data.db', company)
 		data = uol_scraper.scrapeCompanyQuotationsAndReturnAsListOfLists(company)
-		# maybe its faster putting the con here instead of inside the for loop? 
-		con = lite.connect('stock_data.db')
-		for line in data:
-			# print "Inserting " + str(line) + " into table " + company
-			insertIntoTable(con, line, company)
-			total_entries+=1
-			print(total_entries)
-		# print("Total entries: " + total_entries)
-		print("Sucessfully created and inserted data into table " + company)
+		if len(data) > 0:
+			# maybe its faster putting the con here instead of inside the for loop? 
+			con = lite.connect('stock_data.db')
+			for line in data:
+				# print "Inserting " + str(line) + " into table " + company
+				insertIntoTable(con, line, company)
+				total_entries+=1
+				print(total_entries)
+			# print("Total entries: " + total_entries)
+			print("Sucessfully created and inserted data from " + company + " into table " + company.replace(".", "_"))
+		
+			if con:
+				con.close()
 
-
+		else:
+			print ("No historical data to save. Did not create a DB for " + company)
 main()
 
 # todo now:
