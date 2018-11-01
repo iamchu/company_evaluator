@@ -3,6 +3,17 @@ import sys
 import uol_scraper
 import sqlite3 as lite
 
+def create_connection(db_file):
+    """ create a database connection to a SQLite database """
+    # when you make a connection to an unexisting db, sqlite creates that db!
+    try:
+        conn = lite.connect(db_file)
+        print(lite.version)
+    except Error as e:
+        print(e)
+    finally:
+        conn.close()
+
 # creates a respective table for the respective company in the db passed as argument
 def createTable(db, table_name):
 	con = lite.connect(db)
@@ -18,22 +29,14 @@ def createTable(db, table_name):
 
 # argument is one list with the 7 values we need for the company data
 def insertIntoTable(connection_to_db, list_with_data, table_name):
-	# con = lite.connect(db)
 	table_name = table_name.replace(".", "_")
 	with connection_to_db: 
 		cur = connection_to_db.cursor()
 		sqlite_command_insert = "INSERT INTO " + table_name + " VALUES(" + list_with_data[0]+","+list_with_data[1] + "," + list_with_data[2] + "," + list_with_data[3] + "," + list_with_data[4] + "," + list_with_data[5] + "," + list_with_data[6] +")"
 		cur.execute(sqlite_command_insert)
 
-# def insertStockDataIntoTable(data, cotacao, minima, maxima, variacao, variacao_porcentagem, volume, table):
-	# pass
-
-def handleDbInserting():
-	pass
-
 def main():
 	# list_of_company_codes = returnCompanyCodesAsList()
-		
 	data = uol_scraper.scrapeCompanyQuotationsAndReturnAsListOfLists("VIVR3.SA")
 	# for i in range(0,len(uol_scraper.scrapeCompanyQuotationsAndReturnAsListOfLists("VIVR3.SA"))):
 		# print(str(i) + "________________" + str(data[i]))
@@ -41,12 +44,13 @@ def main():
 	# 	if len(line) > 7:
 	# 		print line
 
-	list_of_companies_to_collect_data = ["ITAU3.SA"]
+	list_of_companies_to_collect_data = ["LREN3.SA"]
 
 	for company in list_of_companies_to_collect_data:
 		total_entries = 0
 		createTable('stock_data.db', company)
 		data = uol_scraper.scrapeCompanyQuotationsAndReturnAsListOfLists(company)
+
 		if len(data) > 0:
 			# maybe its faster putting the con here instead of inside the for loop? 
 			con = lite.connect('stock_data.db')
@@ -54,8 +58,8 @@ def main():
 				# print "Inserting " + str(line) + " into table " + company
 				insertIntoTable(con, line, company)
 				total_entries+=1
-				print(total_entries)
-			# print("Total entries: " + total_entries)
+				# print(total_entries)
+			print("Total entries for " + company + ": " + str(total_entries))
 			print("Sucessfully created and inserted data from " + company + " into table " + company.replace(".", "_"))
 		
 			if con:
@@ -66,8 +70,5 @@ def main():
 main()
 
 # todo now:
-# 1) save the data from the tables to a table in the correct database.
-
-# TA DANDO ERRO DO 12 VALUES WERE SUPPLIED POR CAUSA DAS BARRAS E DOS PONTOS NOS NUMEROS INSERIDOS! A TABELA PRECISA DE , PRA FLOAT E ACHO Q BARRAS TALVES SEJAM PROBLEMATICAS (?)
-# PODE ESTAR MUITO DEVAGAR PORQUE ESTOU FECHANDO E ABRINDO A CONEXAO TODA VEZ!!!
-# MAYBE ITS BETTER TO DO BULK INSERTS (MAYBE FASTER????)
+# pra atualizar apenas os dias que n estao na table, eh so pegar o ultimo dia
+# na table e preparar a url com dia month e year begin e usar uol_scraper.scrapeCompanyQuotationsAndReturnAsListOfLists
