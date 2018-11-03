@@ -1,9 +1,10 @@
+# creates db, tables and updates tables
 import os
 import sys
 import uol_scraper
 import sqlite3 as lite
 
-def create_connection(db_file):
+def createConnection(db_file):
     """ create a database connection to a SQLite database """
     # when you make a connection to an unexisting db, sqlite creates that db!
     try:
