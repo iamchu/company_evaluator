@@ -21,14 +21,19 @@ def createTable(db, table_name):
 	table_name = table_name.replace(".", "_")
 	with con:
 		cur = con.cursor()
-		sqlite_command_create = "CREATE TABLE "+ table_name +"(data TEXT, cotacao REAL, minima REAL, maxima REAL, variacao REAL, variacao_porcentagem REAL, volume INT)"
 		sqlite_command_drop = "DROP TABLE IF EXISTS "+ table_name
+		sqlite_command_create = "CREATE TABLE "+ table_name +"(data TEXT, cotacao REAL, minima REAL, maxima REAL, variacao REAL, variacao_porcentagem REAL, volume INT)"
 		cur.execute(sqlite_command_drop)
 		cur.execute(sqlite_command_create)
 	if con:
 		con.close()
+		
+# grabs the most recent day and start inserting newer historical quotation entries
+def updateTable(db, table_name):
+	pass
 
 # argument is one list with the 7 values we need for the company data
+# talvez seja melhor apenas passar o nome da db e criar o lite.connect(db) object dentro da função?
 def insertIntoTable(connection_to_db, list_with_data, table_name):
 	table_name = table_name.replace(".", "_")
 	with connection_to_db: 

@@ -1,6 +1,7 @@
 # handles scraping a list of all companies quoted in brazils stock market (Bovespa)
 # also handles the scraping of their individual historical quotations.
 # the saving and db managing will be made in another file
+# talvez usar http://www.bmfbovespa.com.br/pt_br/servicos/market-data/historico/mercado-a-vista/series-historicas/ para dados historicos
 import os
 import sys
 import bs4
