@@ -54,11 +54,15 @@ def scrapeCompanyQuotationsAndReturnAsListOfLists(company_code):
 
 		line_values = line_soup.find_all("td")
 
+		# obs: o volume tem que ser arrendondado pra baixo! (ou achar alguma forma de armazenar ele quebrado...)
 		for j in range(len(line_values)):
 			if j < 6:
 				current_line_historical_data.append(line_values[j].get_text().replace(",", "."))
 			else:
 				current_line_historical_data.append(line_values[j].get_text().replace(".", ""))
+
+			# if j = 6:
+			# 	mudar apropriadamente...
 		company_historical_data.append(current_line_historical_data)
 
 	# if the company code goes to a page with no historical data (no quotations), this list is empty. It has len(company_historical_data) = 0

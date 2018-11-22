@@ -41,6 +41,11 @@ def insertIntoTable(connection_to_db, list_with_data, table_name):
 		sqlite_command_insert = "INSERT INTO " + table_name + " VALUES(" + list_with_data[0]+","+list_with_data[1] + "," + list_with_data[2] + "," + list_with_data[3] + "," + list_with_data[4] + "," + list_with_data[5] + "," + list_with_data[6] +")"
 		cur.execute(sqlite_command_insert)
 
+
+def updateAllTablesForNewData(): 
+#atualiza as tables buscando apenas as linhas que estavam faltando na table
+	pass
+
 def main():
 	# list_of_company_codes = returnCompanyCodesAsList()
 	data = uol_scraper.scrapeCompanyQuotationsAndReturnAsListOfLists("VIVR3.SA")
@@ -50,7 +55,7 @@ def main():
 	# 	if len(line) > 7:
 	# 		print line
 
-	list_of_companies_to_collect_data = ["LREN3.SA"]
+	list_of_companies_to_collect_data = ["ADHM3.SA"]
 
 	for company in list_of_companies_to_collect_data:
 		total_entries = 0
@@ -62,6 +67,7 @@ def main():
 			con = lite.connect('stock_data.db')
 			for line in data:
 				# print "Inserting " + str(line) + " into table " + company
+				print(line)
 				insertIntoTable(con, line, company)
 				total_entries+=1
 				# print(total_entries)

@@ -1,12 +1,12 @@
-# To test situational stuff... can delete at any moment!
-#!/usr/bin/python
-import uol_scraper
-import os
-import requests
-import bs4
-import sqlite3 as lite
-import sys
-import time
+	# To test situational stuff... can delete at any moment!
+	#!/usr/bin/python
+	import uol_scraper
+	import os
+	import requests
+	import bs4
+	import sqlite3 as lite
+	import sys
+	import time
 
 ## dd/mm/yyyy format
 # print (time.strftime("%d/%m/%Y"))
