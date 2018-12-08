@@ -28,7 +28,7 @@ def returnAllRowsOfCompanySortedByDate(db, table_name):
     with con:
         cur = con.cursor()
         # cur.execute("SELECT data, cotacao, minima, maxima, variacao, variacao_porcentagem, volume FROM " + table_name + " ORDER BY data DESC")
-        cur.execute("SELECT data FROM " + table_name)
+        cur.execute("SELECT * FROM " + table_name)
         
         sorted_company_data = cur.fetchall()
         rows_of_company_sorted = sorted_company_data
@@ -37,7 +37,7 @@ def returnAllRowsOfCompanySortedByDate(db, table_name):
     return rows_of_company_sorted
 
 print(returnAllTablesFromDbAsList("stock_data.db"))
-rows = returnAllRowsOfCompanySortedByDate("stock_data.db", "BRFS3_SA")
+rows = returnAllRowsOfCompanySortedByDate("stock_data.db", "ADHM3_SA")
 print(len(rows))
 for i in rows:
     print(i)

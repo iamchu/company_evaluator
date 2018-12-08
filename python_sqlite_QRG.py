@@ -204,10 +204,13 @@ def actuallyInsertingIntoTable():
 # createTable("my_db.db", "ALL_NINTENDO_GAMES")
 # printAllTablesOfDb("my_db.db")
 # actuallyInsertingIntoTable()
+createConnection("my_db.db")
+createTable("my_db.db", "ALL_NINTENDO_GAMES")
 
 def main():
     selectFromTable("my_db.db", "ALL_NINTENDO_GAMES")
 
+main()
 printAllTablesOfDb("stock_data.db")
 
 # sql operators:
